@@ -1,0 +1,56 @@
+﻿@model UpdateEvent
+@*@model CalendarViewEvent*@
+
+@{
+
+    //UpdateEvent newEvent = ViewData["UpdateEvent"] as UpdateEvent;
+    UpdateEvent myEvent = ViewData["GetEvent"] as UpdateEvent;
+}
+@{
+    ViewData["Title"] = "Update event";
+}
+
+<form asp-action="Update">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <input asp-for="Id" type="hidden" class="form-control" value="@myEvent.Id" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Subject" class="control-label"></label>
+        <input asp-for="Subject" class="form-control" value="@myEvent.Subject" />
+        <span asp-validation-for="Subject" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Attendees" class="control-label"></label>
+        <input asp-for="Attendees" class="form-control" value="@myEvent.Attendees" />
+        <span asp-validation-for="Attendees" class="text-danger"></span>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="Start" class="control-label"></label>
+                <input asp-for="Start" class="form-control" value="@myEvent.Start" />
+                <span asp-validation-for="Start" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="End" class="control-label"></label>
+                <input asp-for="End" class="form-control" value="@myEvent.End" />
+                <span asp-validation-for="End" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Body" class="control-label"></label>
+        <textarea asp-for="Body" class="form-control">@myEvent.Body</textarea>
+        <span asp-validation-for="Body" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Update" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
