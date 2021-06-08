@@ -213,9 +213,18 @@ namespace GraphTutorial.Controllers
         [AuthorizeForScopes(Scopes = new[] { "Calendars.ReadWrite" })]
         public async Task<IActionResult> Update(string id)
         {
-            //ViewData["UpdateEvent"] = new UpdateEvent();
-            
-            var myEvent = await _graphClient.Me.Events[id].Request().GetAsync();
+            Event myEvent;
+            try
+            {
+                 myEvent = await _graphClient.Me.Events[id].Request().GetAsync();
+            }
+            catch (ServiceException ex)
+            {
+                // Redirect to the calendar view with an error message
+                return RedirectToAction("Index")
+                    .WithError("Error getting event", ex.Error.Message);
+            }
+
 
             UpdateEvent viewEvent = new UpdateEvent();
             viewEvent.Id = id;
@@ -319,8 +328,18 @@ namespace GraphTutorial.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
-            await _graphClient.Me.Events[id].Request().DeleteAsync();
-            return RedirectToAction("Index").WithSuccess("Event Deleted");
+            try
+            {
+                await _graphClient.Me.Events[id].Request().DeleteAsync();
+                return RedirectToAction("Index").WithSuccess("Event Deleted");
+            }
+            catch (ServiceException ex)
+            {
+                // Redirect to the calendar view with an error message
+                return RedirectToAction("Index")
+                    .WithError("Error deleting event", ex.Error.Message);
+            }
+
         }
     }
 
